@@ -16,8 +16,8 @@ norma (x,y) = sqrt(x^2+y^2)
 segundos2Tiempo :: Integer -> (Integer, Integer, Integer)
 segundos2Tiempo s=(h,m,seg)
     where
-        h=s'div'3600
-        m=(s-h*3600)'div'60
+        h=s`div`3600
+        m=(s-h*3600)`div`60
         seg=s-(h*3600)-(m*60)
 
 limpiar :: String -> String -> String
@@ -68,17 +68,72 @@ checkParentesis cad = cuentaParentesisAbiertos cad == cuentaParentesisCerrados c
 cuentaParentesisAbiertos :: String -> Int
 cuentaParentesisAbiertos [] = 0 
 cuentaParentesisAbiertos (y:ys)
-|y == '(' = 1 + cuentaParentesisAbiertos ys
-|otherwise = 0 + cuentaParentesisAbiertos ys
+    |y == '(' = 1 + cuentaParentesisAbiertos ys
+    |otherwise = 0 + cuentaParentesisAbiertos ys
 
 cuentaParentesisCerrados :: String -> Int
 cuentaParentesisCerrados [] = 0
 cuentaParentesisCerrados (y:ys)
-|y == ')' = 1 + cuentaParentesisCerrados ys 
-|otherwise = 0 + cuentaParentesisCerrados ys
+    |y == ')' = 1 + cuentaParentesisCerrados ys 
+    |otherwise = 0 + cuentaParentesisCerrados ys
 
 finales :: Int -> [Int] -> [Int]
 finales n xs= reverse (take n (reverse xs))
 
 extremos :: Int -> [Int] -> [Int]
 extremos n xs = take n xs ++ finales n xs
+
+sumarCuadrados :: Int -> Int
+sumarCuadrados n = sum [ x^2 | x <- [1.. n] ]
+
+replica :: Int -> a -> [a]
+replica n  = xs | xs <- [1 .. n]
+
+pares :: [a] -> [b] -> [(a,b)]
+pares xs ys = [ (x,y) | x <- xs , y <- ys ]
+
+resto :: Integer -> Integer -> Integer 
+resto 0 _ = 0
+resto a b 
+    | a<b = a
+    | otherwise = resto (a-b) b
+
+cociente :: Integer -> Integer -> Integer
+cociente 0 _ = 0
+cociente a b
+    | a < b = 0
+    | otherwise = 1 + cociente (a-b) b
+
+sumatoria :: Integer -> Integer -> Integer
+sumatoria a b
+    | a > b = 0
+    | otherwise = a + sumatoria (a+1) b
+
+incTupla :: (Int, Int, Int) -> Int  -> (Int,Int,Int)
+incTupla (a,b,c) x = (a+x,b+x,c+x)
+
+pertenece :: a -> [a] -> Bool
+pertenece a as = a `elem` as
+
+interseccion :: [a] -> [a] -> [a]
+interseccion as bs
+interseccion [] _ = []
+interseccion (a:as) bs
+    | pertenece a bs = a : (interseccion as bs)
+    | otherwise = interseccion as bs
+
+sinRepetidos :: [a] -> [a]
+sinRepetidos [] = []
+sinRepetidos (a:as) 
+    | pertenece a as = sinRepetidos as
+    | otherwise = a: sinRepetidos as
+
+union :: [a] -> [a] -> [a]
+union as bs = sinRepetidos ( as ++ bs )
+
+digitos2Enteros :: [ Integer ] -> Integer
+digitos2Enteros xs =  aux (reverse xs)
+where
+    aux [] = 0
+    aux ( x : xs ) = x + 10 *(aux xs)
+
